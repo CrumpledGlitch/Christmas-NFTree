@@ -68,9 +68,10 @@ def turn_rainbow():
 def turn_random():
     #run some python code
     print("Lets Go Random!", file=sys.stderr)
-    for i in range(10):
+    for i in range(20):
         LED_random()
         time.sleep(0.2)
+        LED_green()
         
     
 

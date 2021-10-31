@@ -5,12 +5,18 @@ import board
 import neopixel
 import random
 from random import randrange
+import redis
+from rq import Queue
 import time
 pixels = neopixel.NeoPixel(board.D18, 60)
+from backgroundtask import background_task
 
 #Warn to run as root / sudo
 print("YOU NEED TO RUN THIS AS SUDO USER FOR IT TO WORK!")
 app = Flask(__name__)
+
+r = redis.Redis()
+q = Queue(connection=r)
 
 #Set Colour Functions
 def LED_green():
@@ -56,34 +62,16 @@ def turn_green():
     return ('', 204) # empty response
 
 
-@app.route('/rainbow', methods=['POST'])
-def turn_rainbow():
-    #run some python code
-    print("Lets Go Rainbow!", file=sys.stderr)
-
-    return ('', 204) # empty response
 
 
-@app.route('/random', methods=['POST'])
+
+@app.route('/random', methods=['POST','HEAD','GET'])
 def turn_random():
     #run some python code
     print("Lets Go Random!", file=sys.stderr)
-    for i in range(20):
-        LED_random()
-        time.sleep(0.2)
-        LED_green()
-        
-    
-
-    return ('', 204) # empty response
-
-@app.route('/animation', methods=['POST'])
-def turn_animated():
-    #run some python code
-    print("Lets Go Animation!", file=sys.stderr)
-
-    return ('', 204) # empty response
-
+    job = q.enqueue(background_task)
+    q_len = len(q)
+    return('',204)    
 
 
 

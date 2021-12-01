@@ -1,2 +1,2 @@
 # Christmas-NFTree
-Mint an NFT, watch the tree, own that clip.
+Mint an NFT, watch the tree.

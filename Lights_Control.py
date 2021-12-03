@@ -1,5 +1,3 @@
-#Simple flask server to control lights via raspi
-
 from flask import Flask, render_template, request, redirect
 from datetime import date
 import sys
@@ -7,6 +5,7 @@ import board
 import neopixel
 import random
 from random import randrange
+import time
 pixels = neopixel.NeoPixel(board.D18, 60)
 
 #Warn to run as root / sudo
@@ -22,10 +21,8 @@ def LED_red():
     pixels.fill((255,0,0))
 def LED_random():
     pixels.fill((randrange(255), randrange(255), randrange(255)))
-#def LED_animation():
-  
-    
-    
+   
+
 
 @app.route('/') # default homepage 
 def home():
@@ -59,17 +56,32 @@ def turn_green():
     return ('', 204) # empty response
 
 
-#############################
-# Main Call will be /random # 
-############################# 
+@app.route('/rainbow', methods=['POST'])
+def turn_rainbow():
+    #run some python code
+    print("Lets Go Rainbow!", file=sys.stderr)
+
+    return ('', 204) # empty response
+
 
 @app.route('/random', methods=['POST'])
 def turn_random():
     #run some python code
     print("Lets Go Random!", file=sys.stderr)
-    LED_random()
+    for i in range(10):
+        LED_random()
+        time.sleep(0.2)
+        
+    
+
     return ('', 204) # empty response
 
+@app.route('/animation', methods=['POST'])
+def turn_animated():
+    #run some python code
+    print("Lets Go Animation!", file=sys.stderr)
+
+    return ('', 204) # empty response
 
 
 

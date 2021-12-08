@@ -9,14 +9,18 @@ Mint an NFT, watch the tree
 - cd repo
 
 - sudo pip3 install rpi_ws281x adafruit-circuitpython-neopixel redis flask rq
+
 --
+
 - wget http://download.redis.io/releases/redis-6.0.6.tar.gz
 - tar xzf redis-6.0.6.tar.gz
 - cd redis-6.0.6
 - make
+
 -- 
-- nodejs
-- npm
+
+- install nodejs
+- install npm
 
 
 ## Running the tree

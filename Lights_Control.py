@@ -62,13 +62,10 @@ def turn_green():
     return ('', 204) # empty response
 
 
-
-
-
 @app.route('/random', methods=['POST','HEAD','GET'])
 def turn_random():
-    #run some python code
     print("Lets Go Random!", file=sys.stderr)
+    #Queue Random request in background - Quicker API response and allows multiple requests at the same time. 
     job = q.enqueue(background_task)
     q_len = len(q)
     return('',204)    

@@ -1,1 +1,1 @@
-ffmpeg -f v4l2 -input_format mjpeg -s 1080x720 -framerate 25 -i /dev/video0 -stream_loop -1 -i ./audio1.mp3 -vcodec libx264 -g 60 -preset veryfast -f flv rtmp://a.rtmp.youtube.com/live2/vk24-tw3c-707k-67c4-3zrj #Key Regenerated after testing.
+ffmpeg -f v4l2 -input_format mjpeg -s 1080x720 -framerate 25 -i /dev/video0 -stream_loop -1 -i ./audio1.mp3 -vcodec libx264 -g 60 -preset veryfast -f flv rtmp://a.rtmp.youtube.com/live2/KEY_HERE #Key Regenerated after testing.

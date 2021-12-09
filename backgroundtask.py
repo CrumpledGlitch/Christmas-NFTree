@@ -16,8 +16,8 @@ def LED_red():
     pixels.fill((255,0,0))
 
 def background_task ():
-    delay = 10
-    time.sleep(delay)
+    #delay = 6
+    #time.sleep(delay)
     print("FLASHING LIGHTS")
     for i in range(20):
         LED_random()

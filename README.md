@@ -31,4 +31,4 @@ The following need to be running in screens or as services (be sure to check whi
 - redis-server
 - **sudo** rq worker
 - sh Youtube.sh (you will have to create your own key)
-
+- Contract_Tracker

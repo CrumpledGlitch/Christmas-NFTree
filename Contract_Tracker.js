@@ -794,10 +794,11 @@ const abi = [
   }
 ]
 
-const contractAddress = '0x2fF7bD42DDA3934a06a3E74737d9E9EF3019cBC3'
+const contractAddress = '0xBf03e9087F6B0B77eDBc96629fCf7d881176d85f'
 
 const webSocketProvider = new ethers.providers.WebSocketProvider("wss://speedy-nodes-nyc.moralis.io/7f2f5296ac8c8a9871192a6e/arbitrum/testnet/ws");
 const contract = new ethers.Contract(contractAddress, abi, webSocketProvider);
+
 
 contract.on("LightTreeUp", (from, to, value, event) => {
         console.log({
@@ -806,3 +807,9 @@ contract.on("LightTreeUp", (from, to, value, event) => {
         console.log("Flashing Lights")
         request.post('http://xmaspi:5000/random')
     });
+
+
+
+contract.onerror = function(err){
+  console.error(err)
+};

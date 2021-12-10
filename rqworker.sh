@@ -1,0 +1,1 @@
+sudo rq worker

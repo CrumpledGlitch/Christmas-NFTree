@@ -794,28 +794,51 @@ const abi = [
   }
 ]
 
-const contractAddress = '0x419DBA5E244767a1a86e64BdDE1E3f984C698BF9'
+const EXPECTED_PONG_BACK = 15000;
+const KEEP_ALIVE_CHECK_INTERVAL = 20000;
+const contractAddress = '0x05e476e205bb50941eae77e054d53D972Ee2F41b'
 
+const startConnection = () => {
+  provider = new ethers.providers.WebSocketProvider("wss://speedy-nodes-nyc.moralis.io/7f2f5296ac8c8a9871192a6e/arbitrum/testnet/ws");
 
-const webSocketProvider = new ethers.providers.WebSocketProvider("wss://speedy-nodes-nyc.moralis.io/7f2f5296ac8c8a9871192a6e/arbitrum/testnet/ws");
-const contract = new ethers.Contract(contractAddress, abi, webSocketProvider);
+  let pingTimeout = null;
+  let keepAliveInterval = null;
 
+  provider._websocket.on("open", () => {
+    keepAliveInterval = setInterval(() => {
+      console.log("Checking if the connection is alive, sending a ping");
 
+      provider._websocket.ping();
 
-contract.on("LightTreeUp", (from, to, value, event) => {
-        console.log({
-            to: to,
-        });
-        console.log("Flashing Lights")
-        request.post('http://xmaspi:5000/random')
+      // Use `WebSocket#terminate()`, which immediately destroys the connection,
+      // instead of `WebSocket#close()`, which waits for the close timer.
+      // Delay should be equal to the interval at which your server
+      // sends out pings plus a conservative assumption of the latency.
+      pingTimeout = setTimeout(() => {
+        provider._websocket.terminate();
+      }, EXPECTED_PONG_BACK);
+    }, KEEP_ALIVE_CHECK_INTERVAL);
+    const contract = new ethers.Contract(contractAddress, abi, provider);
+    contract.on("LightTreeUp", (from, to, value, event) => {
+      console.log({
+        to: to,
+      });
+      console.log("Flashing Lights");
+      request.post("http://xmaspi:5000/random");
     });
+  });
 
-    
-contract.on("error", function(err){
-  console.log("There was an error")
-  console.log(err)
-  contract = new ethers.Contract(contractAddress, abi, webSocketProvider);
-})
+  provider._websocket.on("close", () => {
+    console.log("The websocket connection was closed");
+    clearInterval(keepAliveInterval);
+    clearTimeout(pingTimeout);
+    startConnection();
+  });
 
+  provider._websocket.on("pong", () => {
+    console.log("Received pong, so connection is alive, clearing the timeout");
+    clearInterval(pingTimeout);
+  });
+};
 
-
+startConnection()
